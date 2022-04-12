@@ -1,17 +1,19 @@
 import PySimpleGUI as sg
 import codecs as cdc
 import os.path
+import json
 
 
 def addtofile(credential, file):
-    with open(file, 'a+') as f:
-        f.write(str(credential))
+    with open(file, 'a+') as fp:
+        json.dump(credential, fp)
+        fp.write('\n')
 
 
 def readlines(file):
-    with open(file) as f:
-        contents = f.read()
-        return contents
+    with open(file, "r") as fp:
+        data = [json.loads(each_line) for each_line in fp]
+        return data
 
 
 def openAdd():
@@ -38,7 +40,7 @@ def openAdd():
 
 def main():
     loginlist = []
-    layout = [[sg.Text('Some text on Row 1')],
+    layout = [[sg.Text('Welcome to DigiCore Password Manager V1.0')],
               [sg.Table(values=loginlist, headings=headings)],
               [sg.Button('Add'), sg.Button('Remove')]]
     window = sg.Window('Password Manager', layout)
@@ -54,9 +56,11 @@ def main():
     window.close()
 
 
-loginfile = 'dcore_logins.txt'
+loginfile = 'dcore_logins.json'
 headings = ['Username', 'Password', 'Site/Service']
 sg.theme('DarkAmber')
+array = []
+print(readlines(loginfile))
 
 if __name__ == "__main__":
     main()
