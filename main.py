@@ -12,7 +12,7 @@ def addtofile(credential, file):
 
 def readlines(file):
     with open(file, "r") as fp:
-        data = [json.loads(each_line) for each_line in fp]
+        data = [json.loads(cdc.decode(each_line, 'rot13')) for each_line in fp]
         return data
 
 
@@ -31,6 +31,8 @@ def openAdd():
             credential.append(cdc.encode(values[1], 'rot_13'))
             credential.append(cdc.encode(values[2], 'rot_13'))
             addtofile(credential, loginfile)
+            global login_array
+            login_array = readlines(loginfile)
             window.close()
         elif event == 'Cancel' or event == sg.WIN_CLOSED:
             break
@@ -39,15 +41,12 @@ def openAdd():
 
 
 def main():
-    loginlist = []
     layout = [[sg.Text('Welcome to DigiCore Password Manager V1.0')],
-              [sg.Table(values=loginlist, headings=headings)],
+              [sg.Table(values=login_array, headings=headings)],
               [sg.Button('Add'), sg.Button('Remove')]]
     window = sg.Window('Password Manager', layout)
     while True:
         event, values = window.read()
-        if os.path.isfile(loginfile):
-            loginlist = readlines(loginfile)
         if event == "Exit" or event == sg.WIN_CLOSED:
             break
         if event == 'Add':
@@ -59,8 +58,7 @@ def main():
 loginfile = 'dcore_logins.json'
 headings = ['Username', 'Password', 'Site/Service']
 sg.theme('DarkAmber')
-array = []
-print(readlines(loginfile))
+login_array = readlines(loginfile)
 
 if __name__ == "__main__":
     main()
