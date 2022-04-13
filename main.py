@@ -51,7 +51,7 @@ def main():
     layout = [[sg.Text('Welcome to DigiCore Password Manager V1.0')],
               [sg.Table(values=login_array, headings=headings, key='_table_', justification='left',
                         enable_events=True)],
-              [sg.Button('Add'), sg.Button('Remove')]]
+              [sg.Button('Add'), sg.Button('Remove'), sg.Button('Exit')]]
     window = sg.Window('Password Manager', layout)
     global account_table
     account_table = window['_table_']
@@ -61,8 +61,26 @@ def main():
             break
         if event == 'Add':
             open_add()
+        if event == '_table_':
+            selected_row_index = values['_table_'][0]
+            print(selected_row_index)
+            selected_row = login_array[selected_row_index]
+            print(selected_row)
+            print(len(selected_row))
+        if event == 'Remove':
+            remove_row(login_file, selected_row_index)
+            account_table.update(read_lines(login_file))
 
     window.close()
+
+
+def remove_row(file, index):
+    with open(login_file, "r+") as f:
+        lines = f.readlines()
+        del lines[index] # use linenum - 1 if linenum starts from 1
+        f.seek(0)
+        f.truncate()
+        f.writelines(lines)
 
 
 login_file = 'dcore_logins.json'
