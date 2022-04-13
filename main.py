@@ -1,7 +1,18 @@
+# DigiCore Password Manager
+# Created by Rangga Ardianto 12/03/2022
+# Last updated 13/04/2022
+
+
 import PySimpleGUI as sg
 import codecs as cdc
 import os.path
+import importlib as il
 import json
+
+
+def closeFile():
+    fo = open(loginfile)
+    fo.close
 
 
 def addtofile(credential, file):
@@ -31,9 +42,8 @@ def openAdd():
             credential.append(cdc.encode(values[1], 'rot_13'))
             credential.append(cdc.encode(values[2], 'rot_13'))
             addtofile(credential, loginfile)
-            global login_array
-            login_array = readlines(loginfile)
             window.close()
+            tableWin.update(readlines(loginfile))
         elif event == 'Cancel' or event == sg.WIN_CLOSED:
             break
 
@@ -42,9 +52,11 @@ def openAdd():
 
 def main():
     layout = [[sg.Text('Welcome to DigiCore Password Manager V1.0')],
-              [sg.Table(values=login_array, headings=headings)],
+              [sg.Table(values=login_array, headings=headings, key='_table_', justification='left', enable_events=True)],
               [sg.Button('Add'), sg.Button('Remove')]]
     window = sg.Window('Password Manager', layout)
+    global tableWin
+    tableWin = window['_table_']
     while True:
         event, values = window.read()
         if event == "Exit" or event == sg.WIN_CLOSED:
