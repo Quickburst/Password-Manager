@@ -62,11 +62,12 @@ def main():
         if event == 'Add':
             open_add()
         if event == '_table_':
-            selected_row_index = values['_table_'][0]
-            print(selected_row_index)
-            selected_row = login_array[selected_row_index]
-            print(selected_row)
-            print(len(selected_row))
+            if values['_table_']:
+                selected_row_index = values['_table_'][0]
+                selected_row = login_array[selected_row_index]
+            else:
+                pass
+
         if event == 'Remove':
             remove_row(login_file, selected_row_index)
             account_table.update(read_lines(login_file))
@@ -74,13 +75,14 @@ def main():
     window.close()
 
 
-def remove_row(file, index):
+def remove_row(file, row):
     with open(login_file, "r+") as f:
         lines = f.readlines()
-        del lines[index] # use linenum - 1 if linenum starts from 1
+        del lines[row]  # use linenum - 1 if linenum starts from 1
         f.seek(0)
         f.truncate()
         f.writelines(lines)
+
 
 
 login_file = 'dcore_logins.json'
