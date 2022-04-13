@@ -5,29 +5,22 @@
 
 import PySimpleGUI as sg
 import codecs as cdc
-import os.path
-import importlib as il
 import json
 
 
-def closeFile():
-    fo = open(loginfile)
-    fo.close
-
-
-def addtofile(credential, file):
+def add_to_file(credential, file):
     with open(file, 'a+') as fp:
         json.dump(credential, fp)
         fp.write('\n')
 
 
-def readlines(file):
+def read_lines(file):
     with open(file, "r") as fp:
         data = [json.loads(cdc.decode(each_line, 'rot13')) for each_line in fp]
         return data
 
 
-def openAdd():
+def open_add():
     credential = []
     layout = [[sg.Text('Credentials')],
               [sg.Text('Enter Username'), sg.InputText()],
@@ -41,9 +34,9 @@ def openAdd():
             credential.append(cdc.encode(values[0], 'rot_13'))
             credential.append(cdc.encode(values[1], 'rot_13'))
             credential.append(cdc.encode(values[2], 'rot_13'))
-            addtofile(credential, loginfile)
+            add_to_file(credential, login_file)
             window.close()
-            tableWin.update(readlines(loginfile))
+            account_table.update(read_lines(login_file))
         elif event == 'Cancel' or event == sg.WIN_CLOSED:
             break
 
@@ -52,25 +45,26 @@ def openAdd():
 
 def main():
     layout = [[sg.Text('Welcome to DigiCore Password Manager V1.0')],
-              [sg.Table(values=login_array, headings=headings, key='_table_', justification='left', enable_events=True)],
+              [sg.Table(values=login_array, headings=headings, key='_table_', justification='left',
+                        enable_events=True)],
               [sg.Button('Add'), sg.Button('Remove')]]
     window = sg.Window('Password Manager', layout)
-    global tableWin
-    tableWin = window['_table_']
+    global account_table
+    account_table = window['_table_']
     while True:
         event, values = window.read()
         if event == "Exit" or event == sg.WIN_CLOSED:
             break
         if event == 'Add':
-            openAdd()
+            open_add()
 
     window.close()
 
 
-loginfile = 'dcore_logins.json'
+login_file = 'dcore_logins.json'
 headings = ['Username', 'Password', 'Site/Service']
 sg.theme('DarkAmber')
-login_array = readlines(loginfile)
+login_array = read_lines(login_file)
 
 if __name__ == "__main__":
     main()
