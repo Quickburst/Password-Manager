@@ -6,6 +6,7 @@
 import PySimpleGUI as sg
 import codecs as cdc
 import json
+import os
 
 
 def add_to_file(credential, file):
@@ -15,9 +16,12 @@ def add_to_file(credential, file):
 
 
 def read_lines(file):
-    with open(file, "r") as fp:
-        data = [json.loads(cdc.decode(each_line, 'rot13')) for each_line in fp]
-        return data
+    if os.path.exists(file):
+        with open(file, "r") as fp:
+            data = [json.loads(cdc.decode(each_line, 'rot13')) for each_line in fp]
+            return data
+    else:
+        fp = open(file, 'w')
 
 
 def open_add():
