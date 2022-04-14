@@ -1,6 +1,7 @@
 # DigiCore Password Manager
 # Created by Rangga Ardianto 12/03/2022
 # Last updated 14/04/2022
+# Supervisor Sign-Off
 
 # Import modules
 import PySimpleGUI as sg
